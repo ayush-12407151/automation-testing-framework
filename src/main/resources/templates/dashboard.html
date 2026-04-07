@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Automation Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background: #0f172a;
+            color: white;
+        }
+
+        header {
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            background: #1e293b;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+        }
+
+        .card {
+            flex: 1;
+            padding: 20px;
+            border-radius: 12px;
+            background: #1e293b;
+            text-align: center;
+        }
+
+        .card h2 {
+            margin: 10px 0;
+        }
+
+        .green { color: #22c55e; }
+        .red { color: #ef4444; }
+        .blue { color: #3b82f6; }
+
+        .chart-container {
+            margin-top: 40px;
+            width: 400px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 40px;
+            border-collapse: collapse;
+            background: #1e293b;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #334155;
+        }
+
+        tr:nth-child(even) {
+            background: #0f172a;
+        }
+
+        .status-pass {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .status-fail {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>🚀 Automation Testing Dashboard</header>
+
+<div class="container">
+
+    <!-- Cards -->
+    <div class="cards">
+        <div class="card">
+            <h3>Total Tests</h3>
+            <h2 class="blue" th:text="${total}"></h2>
+        </div>
+
+        <div class="card">
+            <h3>Passed</h3>
+            <h2 class="green" th:text="${passed}"></h2>
+        </div>
+
+        <div class="card">
+            <h3>Failed</h3>
+            <h2 class="red" th:text="${failed}"></h2>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+
+    <!-- Buttons -->
+    <div>
+        <a href="/tests/integrate"><button class="btn">Run Tests</button></a>
+        <a href="/reports/generate"><button class="btn">Generate Report</button></a>
+    </div>
+
+    <!-- Table -->
+    <table>
+        <tr>
+            <th>Test Name</th>
+            <th>Status</th>
+            <th>Execution Time</th>
+        </tr>
+
+        <tr th:each="r : ${results}">
+            <td th:text="${r.testName}"></td>
+            <td th:text="${r.status}"
+                th:classappend="${r.status=='PASS'} ? 'status-pass' : 'status-fail'">
+            </td>
+            <td th:text="${r.executionTime}"></td>
+        </tr>
+
+    </table>
+
+</div>
+
+<script>
+    const passed = [[${passed}]];
+    const failed = [[${failed}]];
+
+    new Chart(document.getElementById('chart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Passed', 'Failed'],
+            datasets: [{
+                data: [passed, failed],
+                backgroundColor: ['#22c55e', '#ef4444']
+            }]
+        }
+    });
+
+    // Auto refresh every 5 sec
+    setTimeout(() => location.reload(), 5000);
+</script>
+
+</body>
+</html>
