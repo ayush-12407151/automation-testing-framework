@@ -76,7 +76,7 @@ Controller → Service → Executor → Test Runners → Analytics → Database 
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/automation-testing-framework.git
+git clone https://github.com/ayush-12407151/automation-testing-framework.git
 ```
 
 ### 2️⃣ Open in IntelliJ
